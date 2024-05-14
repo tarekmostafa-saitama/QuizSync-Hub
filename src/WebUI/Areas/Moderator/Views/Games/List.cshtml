@@ -1,0 +1,97 @@
+﻿@model IEnumerable<CleanArchitecture.Application.Requests.Games.Models.GameVm>
+@{
+    ViewData["Title"] = "Games List";
+}
+@section Styles
+    {
+    <!--datatable css-->
+    <link rel="stylesheet" href="~/vezlon/assets/1.11.5/css/dataTables.bootstrap5.min.css">
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="~/vezlon/assets/responsive/2.2.9/css/responsive.bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/vezlon/assets/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Game List</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Game</a></li>
+                            <li class="breadcrumb-item active">List</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Game  List</h5>
+                    </div>
+                    <div class="card-body">
+                        <table id="example" class="table table-bordered table-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Game Name</th>
+                                    <th >Have Voice Room </th>
+
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var game in Model)
+                                {
+                                    <tr>
+                                        <td> @game.Name</td>
+                                        <td>
+                                            @if (game.IsVrEnabled == true)
+                                            {
+                                                <span class="badge bg-success">YES</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">NO</span>
+
+                                            }
+                                        </td>
+                                        <td>
+                                            <a onclick="copyTextToClipboard('@Url.Action("Index","Game",new{area="User", gameCode=@game.Code , gameName=@game.Name.Replace(" ","-")})')" class="btn btn-sm btn-soft-primary me-2">Copy Game Url</a>
+
+                                            <span><a target="_blank" asp-action="GamePage" asp-area="Moderator" asp-route-code="@game.Code"  asp-controller="Games" type="button" class="btn btn-sm btn-soft-primary me-2">Start Game</a></span>
+
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- container-fluid -->
+</div>
+
+@section Scripts
+    {
+    <script src="~/vezlon/assets/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="~/vezlon/assets/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/vezlon/assets/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#example").DataTable();
+        });
+    </script>
+}

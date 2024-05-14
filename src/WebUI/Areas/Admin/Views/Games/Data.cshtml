@@ -1,0 +1,498 @@
+﻿@model CleanArchitecture.Application.Requests.Games.Models.GameVm
+
+@{
+    ViewData["Title"] = "Data";
+
+}
+
+@section Styles
+{
+    
+    <link href="~/custom/Custom.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vezlon/assets/libs/file-upload/file-upload-with-preview.min.css" rel="stylesheet" />
+
+    <style>
+        ul.frmb { min-height: 508px !important; }
+
+        </style>
+}
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">New Game</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Game</a></li>
+                            <li class="breadcrumb-item active">Create</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row ">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
+                    <a class="btn btn-info m-3" asp-action="List" asp-controller="Games" >Back to Games </a>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row mb-5">
+            <div class="col-lg-12">
+                <!-- Accordions Fill Colored -->
+                <div class="accordion custom-accordionwithicon accordion-fill-success" id="accordionFill">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="accordionFillExample1">
+                            <button class="accordion-button fw-semibold " type="button" data-bs-toggle="collapse" data-bs-target="#accor_fill1" aria-expanded="true" aria-controls="accor_fill1">
+                                Game Basic Info
+                            </button>
+                        </h2>
+                        <div id="accor_fill1" class="accordion-collapse collapse show" aria-labelledby="accordionFillExample1" data-bs-parent="#accordionFill">
+                            <div class="accordion-body">
+
+                                <form asp-action="BasicInfo" asp-route-id="@Model.Id" asp-controller="Games" asp-area="Admin" method="post" id="saveBasicInfoForm">
+                                    <input type="hidden" asp-for="Id"  />
+                                    <input type="hidden" asp-for="Code" />
+                                    <div class="row mb-4">
+                                        <div class="form-group col-md-12">
+                                            <label asp-for="Name">Game Name</label>
+                                            <input asp-for="Name" class="form-control">
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row mb-4">
+                                    
+                                        <div class="form-group col-md-12">
+
+                                            <div >
+                                                <div class=" custom-checkbox ">
+                                                    <input asp-for="IsVrEnabled" class="custom-control-input">
+                                                    <label class="custom-control-label" asp-for="IsVrEnabled">Have Voice Room?</label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+
+
+                                    <button type="submit" class="btn btn-primary mt-3">Save Basic Info</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="accordionFillExample2">
+                            <button class="accordion-button fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accor_fill2" aria-expanded="false" aria-controls="accor_fill2">
+                                Game Registration Form
+                            </button>
+                        </h2>
+                        <div id="accor_fill2" class="accordion-collapse collapse" aria-labelledby="accordionFillExample2" data-bs-parent="#accordionFill">
+                            <div class="accordion-body">
+                                @if (Model.Id == 0)
+                                {
+                                 
+
+                                    <div class="alert  alert-danger mb-4" role="alert">
+
+                                        <i class="ri-error-warning-line me-3 align-middle fs-16"></i>  Please Save the Game Info First before Creating it's form.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="cycleRegisterForms">
+                                        <input type="hidden" id="content" value='@Model.FormContent'/>
+                                        <div style=" background-color: gainsboro;" id="fb-editor"></div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="accordionFillExample3">
+                            <button class="accordion-button fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accor_fill3" aria-expanded="false" aria-controls="accor_fill3">
+                                Game Theme Settings
+                            </button>
+                        </h2>
+                        <div id="accor_fill3" class="accordion-collapse collapse" aria-labelledby="accordionFillExample3" data-bs-parent="#accordionFill">
+                            <div class="accordion-body">
+
+
+                                @if (Model.Id == 0)
+                                {
+
+                                    <div class="alert  alert-danger mb-4" role="alert">
+
+                                        <i class="ri-error-warning-line me-3 align-middle fs-16"></i>  Please Save the Game Info First before Creating it's theme.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form id="themeForm" enctype="multipart/form-data">
+                                        <input name="HeaderLogoUrl" hidden value="@Model.ThemeConfiguration?.HeaderLogoUrl" />
+                                        <input name="BackgroundImageUrl" hidden value="@Model.ThemeConfiguration?.BackgroundImageUrl" />
+                                        <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group mb-4">
+                                                            <label for="MainThemeColor">Main Theme Color</label>
+                                                            <input id="MainThemeColor" value="@Model.ThemeConfiguration?.MainThemeColor" type="color" class="form-control" name="MainThemeColor">
+                                                        </div>
+                                                    </div>
+                                        
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-group mb-4">
+                                                            <label for="SecondaryThemeColor">Secondary Theme Color</label>
+                                                            <input id="SecondaryThemeColor" value="@Model.ThemeConfiguration?.SecondaryThemeColor" type="color" class="form-control" name="SecondaryThemeColor">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                               
+                                                          
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="HeaderLogo">Header Logo</label>
+                                                    <input class="form-control" value="@Model.ThemeConfiguration?.HeaderLogo" name="HeaderLogo" id="HeaderLogo" accept="image/gif, image/jpeg, image/png" type="file">
+                                                </div>
+                                                <div class="col-md-6">
+                                                        <label for="HeaderLogo">Background Image</label>
+                                                    <input class="form-control" value="@Model.ThemeConfiguration?.BackgroundImage" name="BackgroundImage" id="BackgroundImage" accept="image/gif, image/jpeg, image/png" type="file">
+                                                </div>
+                                            </div>
+                                     
+                                            <div class="col-md-12 mt-4">
+                                                <button type="submit" style="width: 100%" class="btn btn-primary">Save Theme</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                           
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="accordionFillExample4">
+                            <button class="accordion-button fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accor_fill4" aria-expanded="false" aria-controls="accor_fill4">
+                                Game Questions
+                            </button>
+                        </h2>
+                        <div id="accor_fill4" class="accordion-collapse collapse" aria-labelledby="accordionFillExample4" data-bs-parent="#accordionFill">
+
+                        
+
+                            <div class="accordion-body">
+
+                                @if (Model.Id == 0)
+                                {
+
+                                    <div class="alert  alert-danger mb-4" role="alert">
+
+                                        <i class="ri-error-warning-line me-3 align-middle fs-16"></i>  Please Save the Game Info First before Creating it's question.
+                                    </div>
+                                }
+
+                              else{
+                                  <div class="row">
+                                      <div>
+                                          <div class="row">
+                                              <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
+                                                  <a class="   btn btn-info mb-4" onclick="OpenPopupContent('@Url.Action("SetQuestion", "Games", new{id = Model.Id , questionId=0})','Add Question')">Add Question </a>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      @if (Model.Questions.Any())
+                                        {
+                                            <div class="col-md-9">
+
+                                                <div class="container border-4 card ">
+
+                                                    <div id="question_container" class="row m-4 game-questions-sort ">
+                                                      
+                                                            @foreach (var question in Model.Questions.OrderBy(x => x.Order))
+                                                            {
+
+
+                                                                <div draggable="true" class="card game-question-sort" id="card_@question.Id">
+                                                                    <div class="card-body">
+                                                                        <div class="row g-0 bg-light position-relative">
+                                                                            <div class="col-md-5">
+                                                                                @if (question.PhotoUrl != null)
+                                                                                {
+                                                                                    <img src="~/uploads/@question.PhotoUrl" style="height: 350px ; width: 400px" class="rounded-start img-fluid" alt="...">
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <img src="~/vezlon/assets/images/no-image2.jpg" style="height: 350px ; width: 400px" class="rounded-start img-fluid" alt="...">
+
+                                                                                }
+                                                                            </div>
+                                                                            <div class="col-md-7 p-4">
+                                                                                <h5 class="mt-0">Question: @question.Title</h5>
+
+                                                                                @foreach (var choice in question.Choices)
+                                                                                {
+                                                                                    @if (choice.IsTrue)
+                                                                                    {
+                                                                                        <p class=" text-success"> -  @choice.ChoiceText</p>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <p>- @choice.ChoiceText</p>
+
+                                                                                    }
+
+                                                                                }
+
+                                                                                <div class="m-2 text-center">
+                                                                                    <a onclick="OpenPopupContent('@Url.Action("SetQuestion", "Games", new{id = Model.Id , questionId=@question.Id})','Add Question')" class="btn btn-info me-2">Edit</a>
+                                                                                    <a onclick="DeleteQuestionConfirmation('@Url.Action("DeleteQuestion", "Games", new{ questionId=@question.Id})',false,
+                                                                                    'GET',
+                                                                                    'card_@question.Id',
+                                                                                    'Delete Question !'
+                                                                                    ,'Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                        
+                                              
+
+
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+
+                                                <aside>
+                                                    <div class="bg-white">
+                                                        <div class="w-100 pt-3 text-center">
+                                                            <h5 >Drag and Drop to order Questions</h5>
+                                                        </div>
+                                                        <ol type="1" class="sortable " style="height: 65vh; overflow-y: scroll;  background-color: #f3f6f9">
+                                                            @foreach (var question in Model.Questions.OrderBy(x => x.Order))
+                                                            {
+                                                                <li class="card_@question.Id  justify-content-between align-items-center"
+                                                                   style="padding: 3px; margin: 5px; color: black; border: 1px solid #000">
+
+                                                                    <input hidden class="sortableElmId" value="@question.Id" />
+
+                                                                    <h6>  @question.Title</h6>
+
+                                                                </li>
+                                                            }
+
+                                                        </ol>
+                                                    </div>
+                                                </aside>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                        
+                                            <div class="justify-content-center mt-5">
+                                                <!-- Danger Alert -->
+                                                <div class=" text-center alert alert-danger alert-dismissible alert-label-icon rounded-label fade show" role="alert">
+                                                    <i class="ri-error-warning-line label-icon"></i><strong> <h5>  No Question In This Game</h5> </strong>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+              
+                                }
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- container-fluid -->
+</div>
+
+@section Scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+    <script src="/custom/gameData.js" asp-append-version="true"> </script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="~/custom/DragAndDrop.js" asp-append-version="true"></script>
+    <script src="~/vezlon/assets/libs/file-upload/file-upload-with-preview.min.js" asp-append-version="true"></script>
+
+ 
+    <script>
+
+        if ('@string.IsNullOrWhiteSpace(Model.FormContent)' == 'True') {
+            jQuery(function ($) {
+                var $fbTemplate1 = $(document.getElementById("fb-editor"));
+                var fbTemplate = document.getElementById('build-wrap');
+
+                var options = {
+                    formData: `[
+  {
+    "type": "text",
+    "required": true,
+    "label": "Full Name",
+    "className": "form-control",
+    "name": "FullName",
+    "access": false,
+    "subtype": "text"
+  },
+  {
+    "type": "button",
+    "subtype": "submit",
+    "label": "Join Game",
+    "className": "btn-default btn",
+    "name": "submit",
+    "access": false,
+    "style": "default"
+  }
+]`,
+                    dataType: 'json',
+                    onSave: function (evt, formData) {
+                        const fd = new FormData();
+                        fd.append('form', JSON.stringify(formData));
+
+                        ldld.on();
+
+                        $.ajax({
+                            url: '@Url.Action("FormData", new {id = Context.Request.RouteValues["id"]})',
+                            data: fd,
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            success: function (data) {
+                                ldld.off();
+
+                            }
+                        });
+                    }
+                };
+
+                $fbTemplate1.formBuilder(options);
+            });
+        }else{
+            jQuery($ => {
+                var $fbTemplate1 = $(document.getElementById("fb-editor"));
+                var options = {
+                    onSave: function (evt, formData) {
+                        const fd = new FormData();
+                        fd.append('form', JSON.stringify(formData));
+
+                        ldld.on();
+
+                        $.ajax({
+                            url: '@Url.Action("FormData", new {id = Context.Request.RouteValues["id"]})',
+                            data: fd,
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            success: function (data) {
+                                ldld.off();
+
+                            }
+                        });
+                    },
+                };
+
+
+                var formBuilder = $fbTemplate1.formBuilder(options);
+                var content = $('#content').val();
+                var test = JSON.stringify(@Html.Raw(Model.FormContent));
+                console.log(content);
+                formBuilder.promise.then(function (fb) {
+                    fb.actions.setData(JSON.parse(test));
+                    console.log("prosmise" + fb)
+                });
+            });
+        }
+
+     
+
+
+    </script>
+
+
+    <script>
+
+        $('#saveBasicInfoForm').submit(function (event) {
+          event.preventDefault(); 
+            if ($('#saveBasicInfoForm').valid()) {
+
+                $('#saveBasicInfoForm').unbind();
+
+                $('#saveBasicInfoForm').submit();
+
+        ldld.on();
+         }
+    });
+
+        function DeleteQuestionConfirmation(url,reload = true, method = 'GET', removedElementId = null,
+            title = "Are you sure ?",
+            text = "Are you sure you want to perform this operation ?",
+            icon = "warning") {
+            swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(function (choice) {
+                if (choice.value) {
+                    ldld.on();
+                    $.ajax({
+                        url: url,
+                        type: method,
+                        success: function (result) {
+                            ldld.off();
+                            if (result.success) {
+                               
+                                Swal.fire(result.message);
+                                
+                                
+                                    document.getElementById(removedElementId).remove();
+                                document.getElementsByClassName(removedElementId)[0].remove();
+                                
+                            }
+                            else {
+                                Swal.fire(result.message);
+                            }
+                        },
+                        error: function (xhr) {
+                            ldld.off;
+                            alert('Something seems Wrong');
+                        }
+                    });
+                }
+            });
+
+        }
+
+    </script>
+}

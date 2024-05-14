@@ -1,0 +1,109 @@
+﻿@using CleanArchitecture.Application.Common.Interfaces
+@inject IIdentityService IdentityService
+@{
+    var user = await IdentityService.GetCurrentUserAsync();
+}
+<!doctype html>
+<html lang="en" data-layout="horizontal" data-topbar="dark" data-sidebar-size="lg" data-sidebar="light" data-sidebar-image="none" data-preloader="disable">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />*@
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/vezlon/assets/images/favicon.ico">
+
+    <!-- Layout config Js -->
+    <script src="~/vezlon/assets/js/layout.js"></script>
+    <!-- Bootstrap Css -->
+    <link href="~/vezlon/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <!-- Icons Css -->
+    <link href="~/vezlon/assets/css/icons.min.css" rel="stylesheet" type="text/css"/>
+    <!-- App Css-->
+    <link href="~/vezlon/assets/css/app.min.css" rel="stylesheet" type="text/css"/>
+    <!-- custom Css-->
+    <link href="~/vezlon/assets/css/custom.min.css" rel="stylesheet" type="text/css"/>
+    @*loading css*@
+    <link href="https://cdn.jsdelivr.net/gh/loadingio/ldLoader@v1.0.0/dist/ldld.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/notification/snackbar/snackbar.min.css" rel="stylesheet" type="text/css">
+
+
+    @await RenderSectionAsync("Styles", false)
+</head>
+
+<body>
+<div class="auth-page-wrapper pt-5">
+    <!-- auth page bg -->
+    <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+        <div class="bg-overlay"></div>
+
+        <div class="shape">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
+                <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+            </svg>
+        </div>
+        <canvas class="particles-js-canvas-el" width="1898" height="475" style="height: 100%; width: 100%;"></canvas>
+    </div>
+
+    <div class="auth-page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center mt-sm-5 mb-4 text-white-50">
+                        <div>
+                            <a href="index.html" class="d-inline-block auth-logo">
+                                <img src="~/vezlon/assets/images/logo-light.png" alt="" height="20">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @RenderBody()
+
+
+        </div>
+    </div>
+</div>
+
+<!--preloader-->
+<div id="preloader">
+    <div id="status">
+        <div class="spinner-border text-primary avatar-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+
+@await Component.InvokeAsync("NToastNotify")
+@*<mini-profiler position="@RenderPosition.BottomRight" max-traces="5" color-scheme="ColorScheme.Auto" nonce="45" decimal-places="2"/>*@
+<div id="my-loader" style="z-index: 1200;" class="ldld full"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<!-- JAVASCRIPT -->
+<script src="~/vezlon/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<partial name="_ValidationPartial"/>
+<script src="https://cdn.jsdelivr.net/gh/loadingio/ldLoader@v1.0.0/dist/ldld.min.js" type="text/javascript"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/vezlon/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/vezlon/assets/libs/node-waves/waves.min.js"></script>
+<script src="~/vezlon/assets/libs/feather-icons/feather.min.js"></script>
+<script src="~/vezlon/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+<!-- App js -->
+<script src="~/vezlon/assets/js/app.js"></script>
+<script src="~/notification/snackbar/snackbar.min.js"></script>
+<script src="~/utility.js"></script>
+<script src="~/blockUI.js"></script>
+<script src="~/signalr/dist/browser/signalr.js"></script>
+
+
+@await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

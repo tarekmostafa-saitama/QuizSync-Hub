@@ -1,0 +1,81 @@
+﻿@model CleanArchitecture.Application.Requests.Games.Models.GameVm
+@{
+
+    ViewData["Title"] = "GamePage";
+}
+@section Styles{
+    <link href="~/custom/custom.css" rel="stylesheet"  asp-append-version="true"/>
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+<!-- start page title -->
+          <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0"> Game</h4>
+
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Game</a></li>
+                                <li class="breadcrumb-item active">Page</li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+         </div>
+        <!-- END page title -->
+
+        <div class="row my-4 gameContent" hidden>
+            <div class=" col-md-3 bg-white joined-players" >
+                <h5 class="text-center text-success">Joined Players (<span class="players-number text-success" style="font-weight: bold" >0</span>)</h5>
+                <hr/>
+                <div id="joinedPlayers">
+                    <table class="table align-middle table-nowrap table-striped-columns mb-0" id="myTable">
+                        <thead class="table-light">
+                        <tr>
+           
+                            <th  scope="col">Name</th>
+                            <th scope="col">Score</th>
+           
+                        </tr>
+                        </thead>
+                        <tbody class="bodyTable">
+                    
+     
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+            <div class="col-md-7 bg-white question-part">
+
+                <div timer id="timer" class=timer> 00:00</div>
+
+               <div id="currentQuestion"></div>
+                               
+               
+            </div>
+            <div class="col-md-1 micIcon" hidden>
+                <button id="Mic-Icon" onclick="toggle(false)"><i class="fas fa-microphone-slash"></i></button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="https://cdn.webrtc.ecl.ntt.com/skyway-4.4.5.js"></script>
+    <script src="~/custom/moderatorHub.js" asp-append-version="true"></script>
+    @if (Model.IsVrEnabled)
+    {
+        <script src="~/custom/voiceRoom.js" asp-append-version="true"></script>
+    }
+
+}

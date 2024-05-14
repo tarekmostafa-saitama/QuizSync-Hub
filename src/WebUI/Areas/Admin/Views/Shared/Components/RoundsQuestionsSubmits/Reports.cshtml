@@ -1,0 +1,94 @@
+﻿@model CleanArchitecture.Application.Requests.GameSubmissions.Models.QuestionSubmitReportVm
+
+
+
+
+<div class=" mb-4">
+
+    <div class="table-responsive ps-5 pe-5  pt-3">
+        <h4 class="text-center"> Q: @Model.QuestionTitle</h4>
+        <table class="table table-bordered table-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%; background-color: #f3f6f9">
+            <thead>
+                <tr>
+                    <th>Choice</th>
+                    @foreach (var choose in Model.ChoicesReportData)
+                    {
+
+                        <th>@choose.Key</th>
+
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Percentage</td>
+                    @foreach (var choice in Model.ChoicesReportData)
+                    {
+                        @if (Model.TotalSubmits != 0)
+                        {
+                            var val = Math.Round((double)@choice.Value / @Model.TotalSubmits * 100, 0);
+                            <td>@choice.Value (@val %) </td>
+                        }
+                        else
+                        {
+                            <td>0 (0 %)</td>
+                        }
+                    }
+                </tr>
+            </tbody>
+
+
+        </table>
+
+
+
+
+    </div>
+</div>
+
+@{
+    var random = Guid.NewGuid();
+}
+
+<div class="text-center" id="graph_@random"></div>
+<script>
+    var arr = @Html.Raw(Json.Serialize(Model.ChoicesReportData.Select(x=>x.Key).ToList()));
+
+    var el = document.getElementById('graph_@random');
+    var data = {
+        categories: [...arr],
+        series: [
+
+            {
+                name: 'Submission Report',
+                data: [...@Html.Raw(Json.Serialize(Model.ChoicesReportData.Select(x=>x.Value).ToList()))],
+                colorByCategories: true
+            }
+
+        ]
+    };
+    var options = {
+        chart: { title: "Q: @Html.Raw(Model.QuestionTitle)", width: 600, height: 400 },
+        series: {
+            dataLabels: {
+                visible: true,
+
+                formatter: (value) => `${value} (${Math.round(value / @Model.TotalSubmits* 100)}%)`,
+
+                pieSeriesName: {
+                    visible: true,
+                },
+            },
+
+        },
+        theme: {
+            series: {
+                colors: ['#43AA8B', '#ffc107', ' #eb6841', '#feb2a8 ', '#fdf498', '#4d648d', '#3c2f2f', '#76b4bd', '#c68642', '#4f5b66 '],
+
+            },
+        }
+    }
+    toastui.Chart.barChart({ el, data, options });
+</script>
+

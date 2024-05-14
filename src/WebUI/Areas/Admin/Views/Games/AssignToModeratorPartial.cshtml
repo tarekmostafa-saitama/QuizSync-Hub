@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CleanArchitecture.Domain.Entities.ApplicationUser>
+  
+@if (Model.Any())
+{
+
+<form method="post" asp-area="Admin" asp-controller="Games" asp-action="AssignToModeratorPartial" asp-route-id="@Context.Request.RouteValues["id"]">
+    <div class="row">
+   
+        <div class="col-12">
+            <div class="mb-3">
+                <label for="moderator" class="form-label">Select a Moderator </label>
+                <select required asp-items="@(new SelectList(Model, "Id", "FullName"))" id="moderator" name="moderatorId" class="form-select">
+                   
+                </select>
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-12 mb-4">
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">Assign Moderator </button>
+                
+            </div>
+                @if (ViewBag.assigned)
+                {
+                    <!-- Warning Alert -->
+                    <div class="alert alert-warning mt-4" role="alert">
+                        <b>Warning .. there is already assigned moderator if you saved the change you will remove him </b> 
+                    </div>
+                }
+           
+        </div><!--end col-->
+    </div><!--end row-->
+</form>
+}
+else
+{
+
+    <!-- Danger Alert -->
+    <div class="alert alert-danger alert-dismissible alert-additional fade show" style="margin: 3rem" role="alert">
+        <div class="alert-body">
+            <div class="d-flex">
+                <div class="flex-shrink-0 me-3">
+                    <i class="ri-error-warning-line fs-16 align-middle"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h5 class="alert-heading">No Moderators</h5>
+                    <p class="mb-0">No Moderators Found in the system</p>
+                </div>
+            </div>
+        </div>
+        <div class="alert-content mt-4">
+            <p class="mb-0">Please create moderators than assign it to the game </p>
+        </div>
+    </div>
+}

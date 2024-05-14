@@ -1,0 +1,144 @@
+﻿@using System.Net
+@using CleanArchitecture.Domain.SignalRModels
+@using Newtonsoft.Json
+@model CleanArchitecture.Application.Requests.GameSubmissions.Models.GameSubmissionVm
+@{
+    var dictionary = Model.SubmittedForm.Trim('{', '}')
+        .Split('&')
+        .Select(x => x.Split('='))
+        .ToDictionary(x => x[0], x => x[1]);
+
+}
+<div class="row">
+    <div>
+    
+                <div class="row">
+                    <h4 class="text-center">User Information</h4>
+
+                    <table class="table table-nowrap">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach(var x in dictionary)
+                        {
+                            if (x.Key != "__RequestVerificationToken")
+                            {
+                        <tr>
+                            <td>@x.Key</td>
+                                <td>@WebUtility.UrlDecode(x.Value)</td>
+                        </tr>
+                            }
+                        }
+                        </tbody>
+                    </table>
+                </div>  
+                 <hr />
+                <div class="row">
+                    <h4 class="text-center">Player Round Details</h4>
+                    @foreach(var data in Model.SubmittedQuestionAndAnswersList)
+                    {
+                        @if (data.IsCorrect)
+                        {
+                            <div >
+                                <div class="card border card-border-success">
+                                    <div class="card-header">
+                                        <h6 class="float-end">@data.QuestionScore</h6>
+                                        <h6 class="card-title mb-0">Correct Answer Question <span class="badge bg-success align-middle fs-10">True</span></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-text">Q-@data.QuestionTitle</h6>
+                                        @foreach(var choice in data.Choices)
+                                        {
+                                    //ri-close-circle-fill
+                                            @if(choice.IsTrue){
+                                                <div >
+                                                    <p class="text-success"> @choice.ChoiceText <i  class="ri-checkbox-circle-fill text-white bg-success"></i> </p>
+                                                </div>
+                                            }   
+                                            else
+                                            {
+                                                <div>
+                                                    <p > @choice.ChoiceText </p>
+                                                </div>
+                                            }
+                                    
+                                        }
+                             
+                                    </div>
+                                </div>
+                           </div>
+                        }
+                        else if(@data.SelectedChoice==null)
+                        {
+                            <div >
+                                <div class="card border card-border-warning">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">TimeOut Question <span class="badge bg-warning align-middle fs-10">Timeout</span></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-text">Q-@data.QuestionTitle</h6>
+                                        @foreach(var choice in data.Choices)
+                                        {
+                                            //ri-close-circle-fill
+                                            @if(choice.IsTrue){
+                                                <div>
+                                                    <p class="text-success"> @choice.ChoiceText <i  class="ri-checkbox-circle-fill text-white bg-success"></i> </p>
+                                                </div>
+                                            }  
+                                            else
+                                            {
+                                                <div>
+                                                    <p > @choice.ChoiceText </p>
+                                                </div>
+                                            }
+                                    
+                                        }
+                             
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="card border card-border-danger">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Wrong Answer Question <span class="badge bg-danger align-middle fs-10">Wrong</span></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-text">Q-@data.QuestionTitle</h6>
+                                        @foreach(var choice in data.Choices)
+                                        {
+                                            @if(choice.IsTrue){
+                                                <div>
+                                                    <p class="text-success"> @choice.ChoiceText <i  class="ri-checkbox-circle-fill text-white bg-success"></i> </p>
+                                                </div>
+                                            }
+                                            else if(choice.ChoiceText ==data.SelectedChoice)
+                                            {
+                                                <div>
+                                                  <p class="text-danger"> @choice.ChoiceText <i class="ri-close-circle-fill text-white bg-danger"></i> </p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div>
+                                                    <p > @choice.ChoiceText </p>
+                                                </div>
+                                            }
+
+                                        }
+                             
+                                    </div>
+                                </div>
+                            </div>
+                        }
+            }
+
+                </div>
+    </div>
+</div>

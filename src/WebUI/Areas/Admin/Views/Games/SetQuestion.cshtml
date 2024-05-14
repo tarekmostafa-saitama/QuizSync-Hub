@@ -1,0 +1,128 @@
+﻿@using CleanArchitecture.Domain.Enums;
+@using CleanArchitecture.Domain.Models
+@model CleanArchitecture.Application.Requests.Questions.Models.QuestionVm
+
+
+
+<link href="~/custom/Custom.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/vezlon/assets/libs/file-upload/file-upload-with-preview.min.css" rel="stylesheet" />
+
+<form id="setQuestionForm" method="post">
+
+<div class="content">
+    <div class="questoin-creator ">
+
+          <input hidden id="id" name="Id" value="@Model.Id"/>
+          <input hidden id="gameId" name="GameId" value="@Context.Request.RouteValues["id"]"/>
+        <div class="row mb-3 ">
+            <div class="col-md-6 my-2">
+                <h6 for="score">Question Score:</h6>
+                    <select  class="form-control" asp-for="Score"  asp-items="Html.GetEnumSelectList<Score>()">
+                        @if(Model.Score == 0)
+                        {
+                            <option selected="selected" value=""> Choose Question Score </option>
+                        }
+               
+                    </select>             
+                    @*<input type="number" id="score"  name="Score" value="@Model.Score" class="form-control">*@
+            </div>
+            <div class="col-md-6 my-2">
+                <h6 for="duration">Duration in seconds:</h6>
+                <div class="input-group">
+                        <select id="duration" name="Duration" class="form-select" >
+                        <option hidden selected value="@Model.Duration">@Model.Duration</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="60">1 Minute</option>
+                        <option value="120">2 Minutes </option>
+                        <option value="180">3 Minutes </option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12 mb-2">
+                <div class="custom-file-container" data-upload-id="myFirstImage">
+                    <label>Upload Image <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
+                    <label class="custom-file-container__custom-file" >
+                        <input type="file" name="Photo" class="custom-file-container__custom-file__custom-file-input" accept="image/*">
+                        <input  type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                        <span class="custom-file-container__custom-file__custom-file-control"></span>
+                    </label>
+                    <div class="custom-file-container__image-preview" style="height: 100px;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+        <div class="question-wrap mb-4">
+            <h6 for="question">Question:</h6>
+            <input type="text" id="question" name="Title" value="@Model.Title" class="form-control">
+        </div>
+            @if (@Model.Id == 0)
+            {
+                <div class="answers">
+                    <h6>Answers:</h6>
+                    <div class="answer">
+                        <input type="text" id="textInput" class="form-control align-self-center me-2">
+                        <input type="radio"  class="align-self-center ps-4" name="IsTrue" id="radioInput">
+                        <button type="button" class="deleteAnsBtn pb-2 pe-2  text-danger">-</button>
+                    </div>
+                    <div class="answer">
+                        <input type="text" id="textInput" class="form-control align-self-center me-2">
+                        <input type="radio" class="align-self-center px-3" name="IsTrue" id="radioInput">
+                        <button type="button" class="deleteAnsBtn pb-2 pe-2 text-danger">-</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="answers">
+               
+                    @foreach (var choice in Model.Choices)
+                    {
+                        <div class="answer">
+                            <input type="text" value="@choice.ChoiceText" id="textInput" class="form-control align-self-center me-2">
+                            <input type="radio" checked="@choice.IsTrue" class="align-self-center ps-4" name="IsTrue" id="radioInput">
+                            <button type="button" class="deleteAnsBtn pb-2 pe-2  text-danger">-</button>
+                        </div> 
+                    }
+                </div>
+            }
+
+  
+    </div>
+
+</div>
+<footer class="text-right mt-4">
+    <button id="AddAnswer" type="button" class="btn btn-info ">Add Another Choice</button>
+        <button type="submit" value="Add Extra Question" class="btn btn-danger" id="save"> Save </button>
+</footer>
+
+</form>
+<script src="~/custom/addQuestion.js" asp-append-version="true"></script>
+<script>
+   
+    var firstUpload = new FileUploadWithPreview('myFirstImage');
+
+
+    if('@string.IsNullOrWhiteSpace(Model.PhotoUrl)' != 'True' ){
+
+        var photo = JSON.parse('@Html.Raw(Json.Serialize(Model.PhotoUrl))');
+        `<img src="/uploads/${photo}" style ="width: 100px;" />     `
+
+        console.log(photo);
+        $(".custom-file-container__image-preview").css("background-image", "url(/uploads/" + photo + ")");
+    }
+
+</script>

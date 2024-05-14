@@ -1,0 +1,60 @@
+﻿.deleteAnsBtn {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+}
+
+.labell {
+    margin-right: 0.3rem;
+}
+
+.answer {
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.answerDrop {
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.addanswer {
+    width: 120px;
+    font-size: 12px;
+    margin-left: 1.7rem;
+}
+#timer {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    border: double;
+    margin-bottom: 1rem;
+}
+.firstScore {
+    padding: 1rem;
+    background-color: rgba(19, 197, 107, 0.53);
+    font-weight: bolder;
+}
+
+#Mic-Icon {
+   
+    font-size: larger;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.joined-players {
+    min-height: 500px;
+    border: ridge;
+    padding: 1rem;
+    margin-right: auto;
+}
+
+.question-part {
+    margin-right: auto;
+    min-height: 500px;
+    border: ridge;
+    padding: 1rem;
+}
+

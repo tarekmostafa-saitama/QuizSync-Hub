@@ -1,0 +1,211 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using StackExchange.Profiling
+@model CleanArchitecture.Application.Requests.Games.Models.GameVm
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Name</title>
+    <!-- FontAwesome-cdn include -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Google fonts include -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Russo+One&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/gh/loadingio/ldLoader@v1.0.0/dist/ldld.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+
+    <!-- Bootstrap-css include -->
+    <link rel="stylesheet" href="~/userTemplate/assets/css/bootsrap.min.css">
+    <!-- Animate-css include -->
+    <link rel="stylesheet" href="~/userTemplate/assets/css/animate.min.css">
+    <!-- Main-StyleSheet include -->
+    <link rel="stylesheet" href="~/userTemplate/assets/css/style.css" asp-append-version="true">
+
+    <link href="~/notification/snackbar/snackbar.min.css" rel="stylesheet" type="text/css">
+    <!-- animation init -->
+    <!-- aos css -->
+    <link rel="stylesheet" href="~/vezlon/assets/libs/aos/aos.css" />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.compat.css"
+    />
+    <style>
+
+        .newJoining{
+            background-color: @Model.ThemeConfiguration.MainThemeColor;
+        }
+    .newJoining:hover {
+        background:@Model.ThemeConfiguration.SecondaryThemeColor;
+        color: white;
+    }
+
+        .selfJoining {
+            background:@Model.ThemeConfiguration.SecondaryThemeColor;
+        }
+
+        .selfJoining:hover{
+            background-color: @Model.ThemeConfiguration.MainThemeColor;
+            color: white;
+        }
+        #submit {
+            background-color: @Model.ThemeConfiguration.SecondaryThemeColor;
+            font-size: 1.125rem;
+            color: white;
+        }
+
+
+        #submit:hover {
+            background:@Model.ThemeConfiguration.MainThemeColor;
+        }
+
+        #sendPlayerAnswer{
+            background-color: @Model.ThemeConfiguration.MainThemeColor;
+        }
+        #sendPlayerAnswer:hover{
+            background:@Model.ThemeConfiguration.SecondaryThemeColor;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper position-relative " style="background-image: url(/uploads/@Model.ThemeConfiguration.BackgroundImageUrl)">
+        <div class="container-fluid p-0 topArea">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="logo_area ps-5 pt-5">
+                        <a href="index.html">
+                            @if(Model.ThemeConfiguration.HeaderLogoUrl!=null){
+                                <img src="~/uploads/@Model.ThemeConfiguration.HeaderLogoUrl"  alt="image_not_found">
+                            }
+
+                            else{
+                            
+                            <img src="~/userTemplate/assets/images/logo.png" alt="image_not_found">
+                            }
+                        </a>
+                    </div>
+                </div>
+
+              <div class="col-sm-4 questionType" style="    text-align: center;
+                                                        margin-top: 2rem;">
+
+              </div>
+
+                <div class="col-sm-4" >
+                    <div class="clock_area countdown_timer position-relative float-end pe-5 pt-5" data-countdown="2022/10/24" hidden>
+             
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row"   >
+            <div class="col-sm-3 micIcon" hidden>
+                <button id="Mic-Icon" onclick="toggle(false)"><i class="fas fa-microphone-slash"></i></button>
+            </div>
+        </div>
+        <div class="container">
+                <!--------------- Step-1 -------------->
+                <div class="multisteps_form_panel step">
+
+                     <div class="login-form  position-relative bg-white" hidden>
+                            <input type="hidden" id="formContent" value="@Model.FormContent"/>
+                            <h4 class="text-center mb-3" style="color:@Model.ThemeConfiguration.MainThemeColor;">Welcome to @Model.Name</h4>
+                            <form  id="joinGameForm" method="POST" class="hero-form">
+
+                              <div id="fb-render" ></div>
+                         
+                            </form><!-- form end-->
+                     </div>
+                     <div id="waitingArea" class="waiting-area row ms-3 " hidden>
+                
+                    </div>
+                    <div class="form_content position-relative bg-white " hidden>
+
+                        <div id="question-content" class="mb-4">
+                         
+                         
+                         </div>
+                        <!-- Reveal button -->
+                    </div>
+                </div>
+              
+        </div>
+        <!-- Form-Button -->
+    
+    </div>
+
+
+<div id="gameStartedModal" class="modal fade" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                
+                <div class="mt-4">
+                    <h4 class="mb-3">Game Is Started.</h4>
+                    <p class="text-muted mb-4"> Ready ...</p>
+                   
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div id="my-loader" style="z-index: 1200;" class="ldld full"></div>
+<mini-profiler position="@RenderPosition.BottomRight" max-traces="5" color-scheme="ColorScheme.Auto" nonce="45" decimal-places="2" />
+
+<!-- jQuery-js include -->
+    <script src="~/userTemplate/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.6.2/form-render.min.js" integrity="sha512-hyB9rzi0Cq17zIbYbCuJSWsKxJGXkOvtshfxjXdmTMeeU6lk/ltLLnu/7OnrUM/ChrLfAQpq7mZKKCyd0C3cPw==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.13.0/dist/sweetalert2.all.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/loadingio/ldLoader@v1.0.0/dist/ldld.min.js" type="text/javascript"></script>
+    <script src="https://cdn.webrtc.ecl.ntt.com/skyway-4.4.5.js"></script>
+
+     
+
+    <script src="~/signalr/dist/browser/signalr.js"></script>
+    @if(Model.IsVrEnabled)
+    {
+        <script src="~/custom/voiceRoom.js" asp-append-version="true"></script>
+    }
+   <script src="~/custom/userHub.js" asp-append-version="true"></script>
+    <!-- Countdown-js include -->
+    <script src="~/userTemplate/assets/js/countdown.js"></script>
+    <!-- Bootstrap-js include -->
+    <script src="~/userTemplate/assets/js/bootstrap.min.js"></script>
+    <!-- jQuery-validate-js include -->
+    <script src="~/userTemplate/assets/js/jquery.validate.min.js"></script>
+    <!-- Custom-js include -->
+    <script src="~/userTemplate/assets/js/script.js" asp-append-version="true"></script>
+    <script src="~/notification/snackbar/snackbar.min.js"></script>
+    <script src="~/blockUI.js"></script>
+
+<!-- aos js -->
+    <script src="~/vezlon/assets/libs/aos/aos.js"></script>
+<!-- prismjs plugin -->
+    <script src="~/vezlon/assets/libs/prismjs/prism.js"></script>
+<!-- animation init -->
+    <script src="~/vezlon/assets/js/pages/animation-aos.init.js"></script>
+
+    <script>
+        jQuery(function ($) {
+            var fbTemplate = document.getElementById('formContent');
+            console.log(fbTemplate.value)
+            $('#fb-render').formRender({
+                dataType: 'json',
+                formData: JSON.parse(fbTemplate.value)
+            });
+
+
+
+        });</script>
+
+  
+
+
+</body>
+

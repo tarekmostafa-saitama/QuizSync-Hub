@@ -1,0 +1,95 @@
+﻿@model CleanArchitecture.Application.Requests.Moderators.Models.CreateModeratorVm
+
+<form method="post" id="createModerator">
+    <div class="row g-3">
+        <div class="col-md-12">
+            <div>
+                <label asp-for="FullName" class="form-label">Full Name</label>
+                <input class="form-control" asp-for="FullName"  name="FullName" placeholder="Enter full name">
+            </div>
+        </div><!--end col-->
+        <div class="col-md-12">
+            <div>
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" name="Email" placeholder="Enter email">
+            </div>
+        </div><!--end col-->
+
+        <div class="col-md-12">
+            <div>
+                <label asp-for="Password" class="form-label">Password</label>
+                <input type="password" asp-for="Password" name="Password" class="form-control">
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-12"> 
+            <div class="hstack gap-2 justify-content-end">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Moderator</button>
+            </div>
+        </div><!--end col-->
+    </div><!--end row-->
+    <div asp-validation-summary="All" class="text-danger">
+        
+    </div>
+</form>
+
+<script>
+    document.querySelector('#createModerator').addEventListener('submit',
+        (e) => {
+            e.preventDefault();
+
+            var data = $("#createModerator").serialize();
+            console.log(data);
+
+            var url = `/Admin/Moderators/Create`
+
+            if ($("#createModerator").valid()){
+                ldld.on();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    success: function (result) {
+                        ldld.off();
+
+                        if (result.succeeded) {
+
+                            location.reload(true);
+                        }
+
+                        else {
+                            console.log(result.errors[0])
+                            Snackbar.show({
+                                text: result.errors[0],
+                                actionTextColor: '#fff',
+                                backgroundColor: '#e7515a'
+
+                            });
+                        }
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        ldld.off()
+                        alert("Something wrong happend will send request")
+                        console.log(xhr.responseText);
+
+
+                    }
+
+                });
+
+            }
+
+
+
+
+
+        });
+
+</script>
+
